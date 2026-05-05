@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Recommendation System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            color: #1b4332;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1b5e20, #43a047);
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 34px;
+        }
+
+        .hero p {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #b7d7b7;
+            font-size: 15px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .predict-btn {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .reset-btn {
+            background: #eeeeee;
+            color: #1b4332;
+        }
+
+        h2, h3 {
+            color: #1b5e20;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th {
+            background: #2e7d32;
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background: #f4fbf4;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .section-title {
+            border-left: 5px solid #2e7d32;
+            padding-left: 10px;
+        }
+
+        @media (max-width: 700px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="hero">
+    <h1>Crop Suitability Recommendation System</h1>
+    <p>Machine Learning Based Agricultural Decision Support</p>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h2 class="section-title">Enter Soil and Environmental Values</h2>
+
+        <form method="POST">
+            <div class="form-grid">
+                <div>
+                    <label>Nitrogen (N)</label>
+                    <input type="number" step="any" name="N" required>
+                </div>
+
+                <div>
+                    <label>Phosphorus (P)</label>
+                    <input type="number" step="any" name="P" required>
+                </div>
+
+                <div>
+                    <label>Potassium (K)</label>
+                    <input type="number" step="any" name="K" required>
+                </div>
+
+                <div>
+                    <label>Temperature</label>
+                    <input type="number" step="any" name="temperature" required>
+                </div>
+
+                <div>
+                    <label>Humidity</label>
+                    <input type="number" step="any" name="humidity" required>
+                </div>
+
+                <div>
+                    <label>Soil pH</label>
+                    <input type="number" step="any" name="ph" required>
+                </div>
+
+                <div>
+                    <label>Rainfall</label>
+                    <input type="number" step="any" name="rainfall" required>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="predict-btn" type="submit">Get Recommendation</button>
+                <a href="/">
+                    <button class="reset-btn" type="button">Reset</button>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    {% if result %}
+
+    <div class="card">
+        <h2 class="section-title">Crop Recommendation Result</h2>
+
+        <h3>Top Crop Recommendations</h3>
+        <table>
+            <tr>
+                <th>Recommended Crop</th>
+                <th>Suitability Percentage</th>
+            </tr>
+
+            {% for c in result.crops %}
+            <tr>
+                <td>{{ c.crop }}</td>
+                <td>{{ c.score }}%</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="card">
+        <h3 class="section-title">Soil Advisory</h3>
+        <ul>
+            {% for s in result.soil %}
+            <li>{{ s }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3 class="section-title">Department-wise Decision Support</h3>
+        <table>
+            <tr>
+                <th>Department</th>
+                <th>Decision Support</th>
+            </tr>
+
+            {% for d in result.department %}
+            <tr>
+                <td>{{ d.department }}</td>
+                <td>{{ d.support }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="card">
+        <h3 class="section-title">Sustainability Output</h3>
+        <ul>
+            {% for s in result.sustainability %}
+            <li>{{ s }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
