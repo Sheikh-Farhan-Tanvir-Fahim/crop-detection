@@ -14,6 +14,7 @@ now localhost link will be genated in the command prompt. Copy and paste that li
 1. The three **.pkl** files are the model files.
 2. **app.py** is the application file through which the model will run.
 3. **index.html** is the application front-end file.
+4. **Crop_recommendation.csv** is the dataset
 
 **N.B. The index.html file must need to be inside templates folder.**
 
